@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+moviepy
+Pillow==9.5.0
+yt-dlp
+python-multipart
