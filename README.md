@@ -1,4 +1,3 @@
-
 ---
 
 # Local Testing Guide
@@ -8,12 +7,30 @@ Follow these steps to test the application locally:
 ---
 
 ## 1. Install ImageMagick
-- Download and install ImageMagick from the official website: [ImageMagick Download Page](https://imagemagick.org/script/download.php)
-- During installation, ensure you check the box to include "Legacy Utilities" if prompted.
+- Download and install **ImageMagick** from the official website: [ImageMagick Download Page](https://imagemagick.org/script/download.php)
+- During installation:
+  - Ensure you check the box to include **"Legacy Utilities"** if prompted.
 
 ---
 
-## 2. Update `main.py`
+## 2. Install FFmpeg
+- Download **FFmpeg** for Windows from the official website: [FFmpeg Download Page](https://ffmpeg.org/download.html)
+- Follow these steps:
+  1. Extract the downloaded archive (e.g., `ffmpeg-release-essentials.zip`) to a folder (e.g., `C:\ffmpeg`).
+  2. Add the `bin` directory to your system's **PATH** environment variable:
+     - Navigate to **System Properties** > **Advanced** > **Environment Variables**.
+     - Under **System Variables**, find and edit the `Path` variable.
+     - Add the path to FFmpeg's `bin` directory (e.g., `C:\ffmpeg\bin`).
+  3. Verify the installation:
+     - Open a Command Prompt and run:
+       ```bash
+       ffmpeg -version
+       ```
+     - You should see version details of FFmpeg.
+
+---
+
+## 3. Update `main.py`
 - Open the `main.py` file in your preferred editor.
 - Locate **Line 12** and update it as follows:
   ```python
@@ -23,7 +40,7 @@ Follow these steps to test the application locally:
 
 ---
 
-## 3. Start the Application
+## 4. Start the Application
 - Open **Command Prompt** or your terminal.
 - Run the following command to start the application:
   ```bash
@@ -32,7 +49,7 @@ Follow these steps to test the application locally:
 
 ---
 
-## 4. Test the Application Using Postman
+## 5. Test the Application Using Postman
 - Open **Postman** and create a new **HTTP Request**:
   - **Method**: POST
   - **URL**: `http://127.0.0.1:8000/generate-video/`
@@ -52,14 +69,19 @@ Follow these steps to test the application locally:
 
 ---
 
-## 5. Send the Request
+## 6. Send the Request
 - After filling in the required fields, click the **Send** button in Postman.
 - Check the response for success or errors.
 
 ---
 
 ### Notes
-- Make sure all dependencies for the project are installed (`pip install -r requirements.txt`).
-- Ensure the `ImageMagick` path provided in `main.py` is correct.
+- Ensure all dependencies for the project are installed:
+  ```bash
+  pip install -r requirements.txt
+  ```
+- Verify that:
+  - The `ImageMagick` path provided in `main.py` is correct.
+  - FFmpeg is installed and accessible via the system's PATH.
 
 ---
