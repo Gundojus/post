@@ -4,14 +4,11 @@ FROM python:3.11-slim
 # Install system dependencies, including FFmpeg and ImageMagick
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    imagemagick \
     libmagic1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify that ImageMagick was installed correctly
-RUN convert -version
-RUN which convert
+RUN apt-get update && apt-get install -y imagemagick
 
 # Set the working directory
 WORKDIR /app
