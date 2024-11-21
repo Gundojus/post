@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-moviepy
+fastapi==0.115.5
+uvicorn==0.32.0
+moviepy==1.0.3
 Pillow==9.5.0
-yt-dlp
-python-multipart
+yt-dlp==2024.11.18
+python-multipart==0.0.17

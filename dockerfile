@@ -4,17 +4,23 @@ FROM python:3.11-slim
 # Install system dependencies, including FFmpeg and ImageMagick
 RUN apt-get update && apt-get install -y \
     ffmpeg \
+    imagemagick \
     libmagic1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y imagemagick
+# Verify that ImageMagick was installed correctly
+RUN convert -version
+RUN which convert
 
 # Set the working directory
 WORKDIR /app
 
-# Set the policy for ImageMagick (fix security policy for certain formats if needed)
-RUN echo "<policy domain=\"coder\" rights=\"read|write\" pattern=\"PDF\" />" >> /etc/ImageMagick-6/policy.xml
+# Modify ImageMagick policy file to remove restrictions on certain patterns
+RUN sed -i '/<policy domain="path" rights="none" pattern="@\*"/d' /etc/ImageMagick-6/policy.xml
+
+# Debug: Print the contents of the policy file to verify the changes
+RUN cat /etc/ImageMagick-6/policy.xml
 
 # Copy the requirements file to the working directory
 COPY requirements.txt .
