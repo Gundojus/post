@@ -5,8 +5,8 @@ from PIL import Image
 from io import BytesIO
 import os
 import yt_dlp
-import tempfile
 from pathlib import Path
+import tempfile
 
 from moviepy.config import change_settings
 change_settings({"IMAGEMAGICK_BINARY": "/usr/bin/convert"})
@@ -16,6 +16,10 @@ app = FastAPI()
 # Paths to static assets
 WATERMARK_PATH = "./watermark.png"
 BACKDROP_PATH = "./backdrop.png"
+OUTPUT_DIR = "./output"  # Directory to persist generated videos
+
+# Ensure output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 def download_youtube_audio(youtube_link: str, output_path: str) -> str:
@@ -41,7 +45,7 @@ async def generate_video(
     audio_offset_ss: int = Form(...)
 ):
     try:
-        # Use a temporary directory for processing
+        # Use a temporary directory for intermediate processing
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
 
@@ -91,8 +95,8 @@ async def generate_video(
             # Add audio to the final video
             final_video = final_video.set_audio(audio_clip)
 
-            # Save video to temporary file
-            output_path = temp_path / "final_video.mp4"
+            # Save video to output directory
+            output_path = Path(OUTPUT_DIR) / "final_video.mp4"
             final_video.write_videofile(
                 str(output_path), fps=24, codec="libx264", audio_codec="aac", preset="ultrafast", threads=4
             )
@@ -100,10 +104,15 @@ async def generate_video(
             # Close the audio clip explicitly to release the file lock
             audio_clip.close()
 
+            # Ensure the file exists before returning
+            if not output_path.exists():
+                raise FileNotFoundError(f"Video file not found: {output_path}")
+
             return FileResponse(str(output_path), media_type="video/mp4", filename="final_video.mp4")
 
     except Exception as e:
         return {"error": str(e)}
+
 
 if __name__ == "__main__":
     import uvicorn
